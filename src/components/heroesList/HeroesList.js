@@ -2,7 +2,7 @@ import {useHttp} from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { heroesFetching, heroesFetched, heroesFetchingError } from '../../actions';
+import { heroesFetching, heroesFetched, heroesFetchingError, heroeGetId, heroeDelete } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
@@ -31,13 +31,18 @@ const HeroesList = () => {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>
     }
 
+    const updateId = (id) => {
+        dispatch(heroeGetId(id));
+        dispatch(heroeDelete());
+    }
+    
     const renderHeroesList = (arr) => {
         if (arr.length === 0) {
             return <h5 className="text-center mt-5">Героев пока нет</h5>
         }
 
-        return arr.map(({id, ...props}) => {
-            return <HeroesListItem key={id} {...props}/>
+        return arr.map(({...props}) => {
+            return <HeroesListItem key={props.id} {...props} updateId={updateId} />
         })
     }
 
