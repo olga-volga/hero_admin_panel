@@ -38,6 +38,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 heroes: [...state.heroes, action.newHeroe]
             }
+        case 'FILTERS_FETCH':
+            return {
+                ...state,
+                filters: action.filters
+            }
         default: return state
     }
 }

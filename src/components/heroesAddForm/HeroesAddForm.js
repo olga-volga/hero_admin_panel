@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
 import {useHttp} from '../../hooks/http.hook';
-import {heroeAdd} from '../../actions';
+import {heroeAdd, fitersFetch} from '../../actions';
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
@@ -21,14 +21,49 @@ const HeroesAddForm = () => {
     const [element, setElement] = useState('Я владею элементом...');
 
     const {request} = useHttp();
+    const {filters} = useSelector(state => state);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        request("http://localhost:3001/filters")
+            .then(data => dispatch(fitersFetch(data)))
+    }, []);
 
     const onSubmit = (e) => {
         e.preventDefault();
         const newHeroe = {id: uuidv4(), name, description, element};
         dispatch(heroeAdd(newHeroe));
-        request(`http://localhost:3001/heroes`, 'POST', JSON.stringify(newHeroe))
+        request("http://localhost:3001/heroes", 'POST', JSON.stringify(newHeroe))
     }
+
+    const renderOptions = (arr) => {
+        const items = arr.map(item => {
+            let filterText;
+            switch(item) {
+                case 'fire':
+                    filterText = 'Огонь';
+                    break;
+                case 'water':
+                    filterText = 'Вода';
+                    break;
+                case 'wind':
+                    filterText = 'Ветер';
+                    break;
+                case 'earth':
+                    filterText = 'Земля';
+                    break;
+            }
+            return item !== 'all' ? <option key={item} value={item}>{filterText}</option> : null;
+        });
+        return (
+            <>
+                <option >Я владею элементом...</option>
+                {items}
+            </>
+        )
+    }
+    const options = renderOptions(filters);
+
     return (
         <form onSubmit={onSubmit} className="border p-4 shadow-lg rounded">
             <div className="mb-3">
@@ -66,11 +101,7 @@ const HeroesAddForm = () => {
                     name="element"
                     value={element}
                     onChange={(e) => setElement(e.target.value)} >
-                    <option >Я владею элементом...</option>
-                    <option value="fire">Огонь</option>
-                    <option value="water">Вода</option>
-                    <option value="wind">Ветер</option>
-                    <option value="earth">Земля</option>
+                    {options}
                 </select>
             </div>
 

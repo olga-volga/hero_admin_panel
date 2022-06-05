@@ -36,3 +36,10 @@ export const heroeAdd = (heroe) => {
         newHeroe: heroe
     }
 }
+
+export const fitersFetch = (filters) => {
+    return {
+        type: 'FILTERS_FETCH',
+        filters: filters
+    }
+}
