@@ -31,9 +31,14 @@ const HeroesList = () => {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>
     }
 
+    const deleteId = (id) => {
+        dispatch(heroeDelete());
+        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
+    }
+
     const updateId = (id) => {
         dispatch(heroeGetId(id));
-        dispatch(heroeDelete());
+        deleteId(id);
     }
     
     const renderHeroesList = (arr) => {
