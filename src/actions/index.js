@@ -29,3 +29,10 @@ export const heroeDelete = () => {
         type: 'HEROE_DELETE'
     }
 }
+
+export const heroeAdd = (heroe) => {
+    return {
+        type: 'HEROE_ADD',
+        newHeroe: heroe
+    }
+}
