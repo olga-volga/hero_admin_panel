@@ -38,22 +38,8 @@ const HeroesAddForm = () => {
 
     const renderOptions = (arr) => {
         const items = arr.map(item => {
-            let filterText;
-            switch(item) {
-                case 'fire':
-                    filterText = 'Огонь';
-                    break;
-                case 'water':
-                    filterText = 'Вода';
-                    break;
-                case 'wind':
-                    filterText = 'Ветер';
-                    break;
-                case 'earth':
-                    filterText = 'Земля';
-                    break;
-            }
-            return item !== 'all' ? <option key={item} value={item}>{filterText}</option> : null;
+            const {filter, label} = item;
+            return filter !== 'all' ? <option key={filter} value={filter}>{label}</option> : null;
         });
         return (
             <>
