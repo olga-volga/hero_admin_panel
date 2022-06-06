@@ -43,3 +43,10 @@ export const fitersFetch = (filters) => {
         filters: filters
     }
 }
+
+export const filterSet = (filter) => {
+    return {
+        type: 'FILTER_SET',
+        filter: filter
+    }
+}
