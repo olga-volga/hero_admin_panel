@@ -1,11 +1,3 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import {useHttp} from '../../hooks/http.hook';
-import {fitersFetch, filterSet} from '../../actions';
-
-let classNames = require('classnames');
-
 // Задача для этого компонента:
 // Фильтры должны формироваться на основании загруженных данных
 // Фильтры должны отображать только нужных героев при выборе
@@ -13,17 +5,35 @@ let classNames = require('classnames');
 // Изменять json-файл для удобства МОЖНО!
 // Представьте, что вы попросили бэкенд-разработчика об этом
 
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import {useHttp} from '../../hooks/http.hook';
+import {filtersFetching, fitersFetched, filtersFetchingError, filterSet} from '../../actions';
+
+import Spinner from '../spinner/Spinner';
+
+let classNames = require('classnames');
+
 const HeroesFilters = () => {
     const {request} = useHttp();
-    const {filters, filterValue} = useSelector(state => state);
+    const {filters, filtersLoadingStatus, filterValue} = useSelector(state => state);
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(filtersFetching());
+
         request("http://localhost:3001/filters")
-            .then(data => dispatch(fitersFetch(data)))
+            .then(data => dispatch(fitersFetched(data)))
+            .catch(() => dispatch(filtersFetchingError()))
     }, []);
 
-    const renderButtons = (arr) => {
+    const renderButtons = (arr, status) => {
+        if (status === 'loading') {
+            return <Spinner />;
+        } else if (status === 'error') {
+            return <h5 className="text-center mt-5">Ошибка загрузки</h5>;
+        }
         return arr.map(item => {
             const {filter, label} = item;
             let btnClass = classNames('btn', {
@@ -38,7 +48,7 @@ const HeroesFilters = () => {
         })
     }
 
-    const buttons = renderButtons(filters);
+    const buttons = renderButtons(filters, filtersLoadingStatus);
 
     return (
         <div className="card shadow-lg mt-4">

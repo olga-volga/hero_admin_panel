@@ -1,10 +1,3 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
-
-import {useHttp} from '../../hooks/http.hook';
-import {heroeAdd, fitersFetch} from '../../actions';
-
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
 // в общее состояние и отображаться в списке + фильтроваться
@@ -15,40 +8,58 @@ import {heroeAdd, fitersFetch} from '../../actions';
 // Элементы <option></option> желательно сформировать на базе
 // данных из фильтров
 
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+
+import {useHttp} from '../../hooks/http.hook';
+import {heroeAdd} from '../../actions';
+
 const HeroesAddForm = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [element, setElement] = useState('Я владею элементом...');
+    const [element, setElement] = useState('');
 
     const {request} = useHttp();
-    const {filters} = useSelector(state => state);
+    const {filters, filtersLoadingStatus} = useSelector(state => state);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        request("http://localhost:3001/filters")
-            .then(data => dispatch(fitersFetch(data)))
-    }, []);
 
     const onSubmit = (e) => {
         e.preventDefault();
-        const newHeroe = {id: uuidv4(), name, description, element};
-        dispatch(heroeAdd(newHeroe));
+        const newHeroe = {
+            id: uuidv4(),
+            name,
+            description,
+            element
+        };
+        
         request("http://localhost:3001/heroes", 'POST', JSON.stringify(newHeroe))
+            .then(dispatch(heroeAdd(newHeroe)))
+            .catch(error => console.log(error))
+        
+        setName('');
+        setDescription('');
+        setElement('');
     }
 
-    const renderOptions = (arr) => {
+    const renderOptions = (arr, status) => {
+        if (status === 'loading') {
+            return <option>Идет загрузка...</option>;
+        } else if (status === 'error') {
+            return <option>Ошибка загрузки</option>;
+        }
         const items = arr.map(item => {
             const {filter, label} = item;
             return filter !== 'all' ? <option key={filter} value={filter}>{label}</option> : null;
         });
         return (
             <>
-                <option >Я владею элементом...</option>
+                <option>Я владею элементом...</option>
                 {items}
             </>
         )
     }
-    const options = renderOptions(filters);
+    const options = renderOptions(filters, filtersLoadingStatus);
 
     return (
         <form onSubmit={onSubmit} className="border p-4 shadow-lg rounded">
