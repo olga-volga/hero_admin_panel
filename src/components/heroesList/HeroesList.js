@@ -1,15 +1,16 @@
-import {useHttp} from '../../hooks/http.hook';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { heroesFetching, heroesFetched, heroesFetchingError, heroeGetId, heroeDelete } from '../../actions';
-import HeroesListItem from "../heroesListItem/HeroesListItem";
-import Spinner from '../spinner/Spinner';
-
 // Задача для этого компонента:
 // При клике на "крестик" идет удаление персонажа из общего состояния
 // Усложненная задача:
 // Удаление идет и с json файла при помощи метода DELETE
+
+import {useHttp} from '../../hooks/http.hook';
+import { useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
+import { heroesFetching, heroesFetched, heroesFetchingError, heroeDelete } from '../../actions';
+import HeroesListItem from "../heroesListItem/HeroesListItem";
+import Spinner from '../spinner/Spinner';
 
 const HeroesList = () => {
     const {heroes, heroesLoadingStatus, filterValue} = useSelector(state => state);
@@ -25,45 +26,44 @@ const HeroesList = () => {
         // eslint-disable-next-line
     }, []);
 
+    const deleteHeroe = useCallback((id) => {
+        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
+            .then(dispatch(heroeDelete(id)))
+            .catch(error => console.log(error))
+    }, [request]);
+
     if (heroesLoadingStatus === "loading") {
         return <Spinner/>;
     } else if (heroesLoadingStatus === "error") {
         return <h5 className="text-center mt-5">Ошибка загрузки</h5>
     }
-
-    const deleteId = (id) => {
-        dispatch(heroeDelete());
-        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
-    }
-
-    const updateId = (id) => {
-        dispatch(heroeGetId(id));
-        deleteId(id);
-    }
     
     const renderHeroesList = (arr) => {
         if (arr.length === 0) {
-            return <h5 className="text-center mt-5">Героев пока нет</h5>
+            return (
+                <CSSTransition timeout={600} classNames="hero">
+                    <h5 className="text-center mt-5">Героев пока нет</h5>
+                </CSSTransition>
+            )
         }
-        return arr.map(({...props}) => {
-            return <HeroesListItem key={props.id} {...props} updateId={updateId} />
+        return arr.map(({id, ...props}) => {
+            return (
+                <CSSTransition timeout={600} classNames="hero">
+                    <HeroesListItem key={id} {...props} deleteHeroe={() => deleteHeroe(id)} />
+                </CSSTransition>
+            )
         })
     }
 
     const filterHeroes = (arr, filter) => {
-        switch(filter) {
-            case 'all':
-                return arr;
-            default:
-                return arr.filter(item => item.element === filter);
-        }
+        return filter === 'all' ? arr : arr.filter(item => item.element === filter);
     }
 
     const elements = renderHeroesList(filterHeroes(heroes, filterValue));
     return (
-        <ul>
+        <TransitionGroup component="ul">
             {elements}
-        </ul>
+        </TransitionGroup>
     )
 }
 
