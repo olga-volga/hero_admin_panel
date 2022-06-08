@@ -12,6 +12,8 @@ import { heroesFetching, heroesFetched, heroesFetchingError, heroeDelete } from 
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
+import './heroesList.scss';
+
 const HeroesList = () => {
     const {heroes, heroesLoadingStatus, filterValue} = useSelector(state => state);
     const dispatch = useDispatch();
