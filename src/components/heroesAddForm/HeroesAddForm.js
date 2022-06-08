@@ -21,7 +21,7 @@ const HeroesAddForm = () => {
     const [element, setElement] = useState('');
 
     const {request} = useHttp();
-    const {filters, filtersLoadingStatus} = useSelector(state => state);
+    const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
     const dispatch = useDispatch();
 
     const onSubmit = (e) => {

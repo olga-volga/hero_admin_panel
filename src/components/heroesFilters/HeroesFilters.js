@@ -17,7 +17,7 @@ let classNames = require('classnames');
 
 const HeroesFilters = () => {
     const {request} = useHttp();
-    const {filters, filtersLoadingStatus, filterValue} = useSelector(state => state);
+    const {filters, filtersLoadingStatus, filterValue} = useSelector(state => state.filters);
     const dispatch = useDispatch();
 
     useEffect(() => {

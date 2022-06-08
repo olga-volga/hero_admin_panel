@@ -6,6 +6,7 @@
 import {useHttp} from '../../hooks/http.hook';
 import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect'
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import { heroesFetching, heroesFetched, heroesFetchingError, heroeDelete } from '../../actions';
@@ -15,7 +16,23 @@ import Spinner from '../spinner/Spinner';
 import './heroesList.scss';
 
 const HeroesList = () => {
-    const {heroes, heroesLoadingStatus, filterValue} = useSelector(state => state);
+    const filteredHeroesSelector = createSelector(
+        state => state.filters.filterValue,
+        state => state.heroes.heroes,
+        (filterValue, heroes) => {
+            return filterValue === 'all' ? heroes : heroes.filter(item => item.element === filterValue);
+        }
+    );
+
+    const filteredHeroes = useSelector(filteredHeroesSelector);
+
+    // before combining reducers
+    // const filteredHeroes = useSelector(state => {
+    //     return state.filters.filterValue === 'all' ? state.heroes.heroes : state.heroes.heroes.filter(item => item.element === state.filters.filterValue);
+    // });
+
+    const {heroesLoadingStatus} = useSelector(state => state.heroes.heroesLoadingStatus);
+
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -50,18 +67,14 @@ const HeroesList = () => {
         }
         return arr.map(({id, ...props}) => {
             return (
-                <CSSTransition timeout={600} classNames="hero">
-                    <HeroesListItem key={id} {...props} deleteHeroe={() => deleteHeroe(id)} />
+                <CSSTransition key={id} timeout={600} classNames="hero">
+                    <HeroesListItem {...props} deleteHeroe={() => deleteHeroe(id)} />
                 </CSSTransition>
             )
         })
     }
 
-    const filterHeroes = (arr, filter) => {
-        return filter === 'all' ? arr : arr.filter(item => item.element === filter);
-    }
-
-    const elements = renderHeroesList(filterHeroes(heroes, filterValue));
+    const elements = renderHeroesList(filteredHeroes);
     return (
         <TransitionGroup component="ul">
             {elements}
