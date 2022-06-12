@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {useHttp} from '../../hooks/http.hook';
-import {filtersFetching, fitersFetched, filtersFetchingError, filterSet} from '../../actions';
+import {fetchFilters, filterSet} from '../../actions';
 
 import Spinner from '../spinner/Spinner';
 
@@ -21,11 +21,7 @@ const HeroesFilters = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(filtersFetching());
-
-        request("http://localhost:3001/filters")
-            .then(data => dispatch(fitersFetched(data)))
-            .catch(() => dispatch(filtersFetchingError()))
+        dispatch(fetchFilters(request));
     }, []);
 
     const renderButtons = (arr, status) => {
