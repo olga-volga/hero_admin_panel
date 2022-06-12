@@ -31,25 +31,31 @@ export const heroesFetching = createAction('HEROES_FETCHING');
 
 export const heroesFetched = createAction('HEROES_FETCHED');
 
-export const heroesFetchingError = () => {
-    return {
-        type: 'HEROES_FETCHING_ERROR'
-    }
-}
+// export const heroesFetchingError = () => {
+//     return {
+//         type: 'HEROES_FETCHING_ERROR'
+//     }
+// }
 
-export const heroeDelete = (id) => {
-    return {
-        type: 'HEROE_DELETE',
-        payload: id
-    }
-}
+export const heroesFetchingError = createAction('HEROES_FETCHING_ERROR');
 
-export const heroeAdd = (heroe) => {
-    return {
-        type: 'HEROE_ADD',
-        newHeroe: heroe
-    }
-}
+// export const heroeDelete = (id) => {
+//     return {
+//         type: 'HEROE_DELETE',
+//         payload: id
+//     }
+// }
+
+export const heroeDelete = createAction('HEROE_DELETE');
+
+// export const heroeAdd = (heroe) => {
+//     return {
+//         type: 'HEROE_ADD',
+//         newHeroe: heroe
+//     }
+// }
+
+export const heroeAdd = createAction('HEROE_ADD');
 
 export const filtersFetching = () => {
     return {
