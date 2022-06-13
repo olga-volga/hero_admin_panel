@@ -8,21 +8,19 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {useHttp} from '../../hooks/http.hook';
-import {fetchFilters} from '../../actions';
-import {filterSet} from './filtersSlice';
+import {fetchFilters, filterSet} from './filtersSlice';
 
 import Spinner from '../spinner/Spinner';
 
 let classNames = require('classnames');
 
 const HeroesFilters = () => {
-    const {request} = useHttp();
     const {filters, filtersLoadingStatus, filterValue} = useSelector(state => state.filters);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchFilters(request));
+        dispatch(fetchFilters());
+        // eslint-disable-next-line
     }, []);
 
     const renderButtons = (arr, status) => {
