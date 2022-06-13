@@ -1,4 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
+import {heroesFetching, heroesFetched, heroesFetchingError} from '../components/heroesList/heroesSlice';
+import {filtersFetching, fitersFetched, filtersFetchingError} from '../components/heroesFilters/filtersSlice';
 
 export const fetchHeroes = (request) => (dispatch) => {
     dispatch(heroesFetching());
@@ -20,7 +22,7 @@ export const fetchFilters = (request) => (dispatch) => {
 //     }
 // }
 
-export const heroesFetching = createAction('HEROES_FETCHING');
+// export const heroesFetching = createAction('HEROES_FETCHING');
 
 // export const heroesFetched = (heroes) => {
 //     return {
@@ -29,7 +31,7 @@ export const heroesFetching = createAction('HEROES_FETCHING');
 //     }
 // }
 
-export const heroesFetched = createAction('HEROES_FETCHED');
+// export const heroesFetched = createAction('HEROES_FETCHED');
 
 // export const heroesFetchingError = () => {
 //     return {
@@ -37,7 +39,7 @@ export const heroesFetched = createAction('HEROES_FETCHED');
 //     }
 // }
 
-export const heroesFetchingError = createAction('HEROES_FETCHING_ERROR');
+// export const heroesFetchingError = createAction('HEROES_FETCHING_ERROR');
 
 // export const heroeDelete = (id) => {
 //     return {
@@ -46,7 +48,7 @@ export const heroesFetchingError = createAction('HEROES_FETCHING_ERROR');
 //     }
 // }
 
-export const heroeDelete = createAction('HEROE_DELETE');
+// export const heroeDelete = createAction('HEROE_DELETE');
 
 // export const heroeAdd = (heroe) => {
 //     return {
@@ -55,33 +57,33 @@ export const heroeDelete = createAction('HEROE_DELETE');
 //     }
 // }
 
-export const heroeAdd = createAction('HEROE_ADD');
+// export const heroeAdd = createAction('HEROE_ADD');
 
-export const filtersFetching = () => {
-    return {
-        type: 'FILTERS_FETCHING'
-    }
-}
+// export const filtersFetching = () => {
+//     return {
+//         type: 'FILTERS_FETCHING'
+//     }
+// }
 
-export const fitersFetched = (filters) => {
-    return {
-        type: 'FILTERS_FETCHED',
-        filters: filters
-    }
-}
+// export const fitersFetched = (filters) => {
+//     return {
+//         type: 'FILTERS_FETCHED',
+//         filters: filters
+//     }
+// }
 
-export const filtersFetchingError = () => {
-    return {
-        type: 'FILTERS_FETCHING_ERROR'
-    }
-}
+// export const filtersFetchingError = () => {
+//     return {
+//         type: 'FILTERS_FETCHING_ERROR'
+//     }
+// }
 
-export const filterSet = (filter) => {
-    return {
-        type: 'FILTER_SET',
-        filter: filter
-    }
-}
+// export const filterSet = (filter) => {
+//     return {
+//         type: 'FILTER_SET',
+//         filter: filter
+//     }
+// }
 
 // export const filterSet = (filter) => (dispatch) => {
 //     setTimeout(() => {

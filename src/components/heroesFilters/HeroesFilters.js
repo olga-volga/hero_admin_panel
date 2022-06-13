@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {useHttp} from '../../hooks/http.hook';
-import {fetchFilters, filterSet} from '../../actions';
+import {fetchFilters} from '../../actions';
+import {filterSet} from './filtersSlice';
 
 import Spinner from '../spinner/Spinner';
 
