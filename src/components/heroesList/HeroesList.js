@@ -5,11 +5,10 @@
 
 import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createSelector } from '@reduxjs/toolkit';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import {useHttp} from '../../hooks/http.hook';
-import {fetchHeroes, heroeDelete} from './heroesSlice';
+import {fetchHeroes, heroeDelete, filteredHeroesSelector} from './heroesSlice';
 
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
@@ -17,14 +16,6 @@ import Spinner from '../spinner/Spinner';
 import './heroesList.scss';
 
 const HeroesList = () => {
-    const filteredHeroesSelector = createSelector(
-        state => state.filters.filterValue,
-        state => state.heroes.heroes,
-        (filterValue, heroes) => {
-            return filterValue === 'all' ? heroes : heroes.filter(item => item.element === filterValue);
-        }
-    );
-
     const filteredHeroes = useSelector(filteredHeroesSelector);
 
     // before combining reducers

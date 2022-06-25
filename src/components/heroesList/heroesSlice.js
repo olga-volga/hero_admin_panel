@@ -1,11 +1,27 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSelector, createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
 
 import {useHttp} from '../../hooks/http.hook';
 
-const initialState = {
-    heroes: [],
+const heroesAdapter = createEntityAdapter();
+
+// const initialState = {
+//     heroes: [],
+//     heroesLoadingStatus: 'idle'
+// }
+
+const initialState = heroesAdapter.getInitialState({
     heroesLoadingStatus: 'idle'
-}
+});
+
+const {selectAll} = heroesAdapter.getSelectors(state => state.heroes);
+
+export const filteredHeroesSelector = createSelector(
+    state => state.filters.filterValue,
+    selectAll,
+    (filterValue, heroes) => {
+        return filterValue === 'all' ? heroes : heroes.filter(item => item.element === filterValue);
+    }
+);
 
 export const fetchHeroes = createAsyncThunk(
     'heroes/fetchHeroes',
@@ -20,10 +36,12 @@ const heroesSlice = createSlice({
     initialState,
     reducers: {
         heroeAdd: (state, action) => {
-            state.heroes.push(action.payload);
+            // state.heroes.push(action.payload);
+            heroesAdapter.addOne(state, action.payload);
         },
         heroeDelete: (state, action) => {
-            state.heroes = state.heroes.filter(item => item.id !== action.payload);
+            // state.heroes = state.heroes.filter(item => item.id !== action.payload);
+            heroesAdapter.removeOne(state, action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -32,7 +50,8 @@ const heroesSlice = createSlice({
                 state.heroesLoadingStatus = 'loading';
             })
             .addCase(fetchHeroes.fulfilled, (state, action) => {
-                state.heroes = action.payload;
+                // state.heroes = action.payload;
+                heroesAdapter.setAll(state, action.payload);
                 state.heroesLoadingStatus = 'idle';
             })
             .addCase(fetchHeroes.rejected, (state) => {

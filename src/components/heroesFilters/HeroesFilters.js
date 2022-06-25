@@ -8,14 +8,15 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {fetchFilters, filterSet} from './filtersSlice';
+import {fetchFilters, filterSet, selectAll} from './filtersSlice';
 
 import Spinner from '../spinner/Spinner';
 
 let classNames = require('classnames');
 
 const HeroesFilters = () => {
-    const {filters, filtersLoadingStatus, filterValue} = useSelector(state => state.filters);
+    const filters = useSelector(selectAll);
+    const {filtersLoadingStatus, filterValue} = useSelector(state => state.filters);
     const dispatch = useDispatch();
 
     useEffect(() => {
